@@ -43,7 +43,6 @@ syntax match hsNiceOperator "\<pi\>" conceal cchar=π
 syntax match hsNiceOperator "\<undefined\>" conceal cchar=⟘
 syntax match hsNiceOperator "==" conceal cchar=≡
 syntax match hsNiceOperator "\/=" conceal cchar=≠
-syntax match hsNiceOperator ">>" conceal cchar=»
 
 sy match hsQQEnd "|\]" contained conceal cchar=〛
 " sy match hsQQEnd "|\]" contained conceal=〚
