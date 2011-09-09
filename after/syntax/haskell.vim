@@ -42,6 +42,7 @@ syntax match hsNiceOperator "\<sum\>" conceal cchar=∑
 syntax match hsNiceOperator "\<product\>" conceal cchar=∏ 
 syntax match hsNiceOperator "\<sqrt\>" conceal cchar=√ 
 syntax match hsNiceOperator "\<pi\>" conceal cchar=π
+syntax match hsNiceOperator "\<undefined\>" conceal cchar=⊥
 syntax match hsNiceOperator "==" conceal cchar=≡
 syntax match hsNiceOperator "\/=" conceal cchar=≠
 
