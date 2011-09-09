@@ -2,13 +2,14 @@
 " What Is This: Add some conceal operator for your haskell files
 " File:         haskell.vim (conceal enhancement)
 " Author:       Vincent Berthoux <twinside@gmail.com>
-" Last Change:  2011 mar 08
-" Version:      1.3
+" Last Change:  2011-09-07
+" Version:      1.3.2
 " Require:
 "   set nocompatible
 "     somewhere on your .vimrc
 "
-"   Vim 7.3 or Vim compiled with conceal patch
+"   Vim 7.3 or Vim compiled with conceal patch.
+"   Use --with-features=big or huge in order to compile it in.
 "
 " Usage:
 "   Drop this file in your
@@ -23,6 +24,7 @@
 "       line in your .vimrc :
 "        let g:no_haskell_conceal = 1
 "  Changelog:
+"   - 1.3.1: putting undefined in extra conceal, not appearing on windows
 "   - 1.3: adding new arrow characters used by GHC in Unicode extension.
 "   - 1.2: Fixing conceal level to be local (thx Erlend Hamberg)
 "   - 1.1: Better handling of non utf-8 systems, and avoid some
@@ -33,19 +35,15 @@ if exists('g:no_haskell_conceal') || !has('conceal') || &enc != 'utf-8'
 endif
 
 " vim: set fenc=utf-8:
-syntax match hsNiceOperator "\\\@<!\\\\\@!=" conceal cchar=λ
+syntax match hsNiceOperator "\\\ze[[:alpha:][:space:]_([]" conceal cchar=λ
 syntax match hsNiceOperator "<-" conceal cchar=←
 syntax match hsNiceOperator "->" conceal cchar=→
 syntax match hsNiceOperator "\<sum\>" conceal cchar=∑
 syntax match hsNiceOperator "\<product\>" conceal cchar=∏ 
 syntax match hsNiceOperator "\<sqrt\>" conceal cchar=√ 
 syntax match hsNiceOperator "\<pi\>" conceal cchar=π
-syntax match hsNiceOperator "\<undefined\>" conceal cchar=⟘
 syntax match hsNiceOperator "==" conceal cchar=≡
 syntax match hsNiceOperator "\/=" conceal cchar=≠
-
-sy match hsQQEnd "|\]" contained conceal cchar=〛
-" sy match hsQQEnd "|\]" contained conceal=〚
 
 let s:extraConceal = 1
 " Some windows font don't support some of the characters,
@@ -65,9 +63,14 @@ if has("win32")
 endif
 
 if s:extraConceal
-    syntax match hsNiceOperator "<=" conceal cchar=≲
-    syntax match hsNiceOperator ">=" conceal cchar=≳
+    syntax match hsNiceOperator "\<undefined\>" conceal cchar=⊥
+
+    " Match greater than and lower than w/o messing with Kleisli composition
+    syntax match hsNiceOperator "<=\ze[^<]" conceal cchar=≲
+    syntax match hsNiceOperator ">=\ze[^>]" conceal cchar=≳
+
     syntax match hsNiceOperator "=>" conceal cchar=⇒
+    syntax match hsNiceOperator "=\zs<<" conceal cchar=«
 
     " Redfining to get proper '::' concealing
     syntax match hs_DeclareFunction /^[a-z_(]\S*\(\s\|\n\)*::/me=e-2 nextgroup=hsNiceOperator contains=hs_FunctionName,hs_OpFunctionName
@@ -84,10 +87,11 @@ if s:extraConceal
 
     " Only replace the dot, avoid taking spaces around.
     syntax match hsNiceOperator /\s\.\s/ms=s+1,me=e-1 conceal cchar=∘
-    syntax match hsNiceOperator "\.\." conceal cchar=…
+    syntax match hsNiceOperator "\.\." conceal cchar=‥
+
+    syntax match hsQQEnd "|\]" contained conceal cchar=〛
+    " sy match hsQQEnd "|\]" contained conceal=〚
 endif
-
-
 
 hi link hsNiceOperator Operator
 hi! link Conceal Operator
